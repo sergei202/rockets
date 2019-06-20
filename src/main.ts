@@ -7,7 +7,7 @@ import { random } from './helpers';
 var ctx:CanvasRenderingContext2D;
 var pop:Population;
 var target:Target;
-var wall:Wall;
+var walls:Wall[] = [];
 
 function setup() {
 	const canvas:any = document.getElementById('canvas');
@@ -15,9 +15,11 @@ function setup() {
 	canvas.width = 1000;
 	ctx = canvas.getContext('2d');
 
-	target = new Target(0,200);
-	pop = new Population(100, 200);
-	wall = new Wall(0,50, 400,10);
+	target = new Target(0,180);
+	pop = new Population(100, 250);
+	walls.push(new Wall(0,50, 400,10));
+	walls.push(new Wall(-200,150, 10,200));
+	walls.push(new Wall( 200,150, 10,200));
 
 	requestAnimationFrame(draw);
 }
@@ -38,7 +40,7 @@ function draw() {
 
 	pop.draw(ctx);
 	target.draw(ctx);
-	wall.draw(ctx);
+	walls.forEach(w => w.draw(ctx));
 
 	var bestFitness = pop.rockets.sort((a,b) => b.fitness-a.fitness)[0].fitness;
 	var goalCount = pop.rockets.filter(r => r.hitGoal).length;
@@ -73,7 +75,7 @@ class Population {
 		this.rockets.forEach(rocket => {
 			rocket.draw(ctx);
 			rocket.update();
-			if(wall.collision(rocket)) rocket.hitWall = true;
+			if(walls.some(w => w.collision(rocket))) rocket.hitWall = true;
 		});
 
 
