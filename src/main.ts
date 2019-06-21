@@ -15,11 +15,11 @@ function setup() {
 	canvas.width = 1000;
 	ctx = canvas.getContext('2d');
 
-	target = new Target(0,180);
-	pop = new Population(100, 250);
-	walls.push(new Wall(0,50, 400,10));
-	walls.push(new Wall(-200,150, 10,200));
-	walls.push(new Wall( 200,150, 10,200));
+	target = new Target(0,100);
+	pop = new Population(500, 250);
+	walls.push(new Wall(0,0, 400,10));
+	walls.push(new Wall(-200,100, 10,200));
+	walls.push(new Wall( 200,100, 10,200));
 
 	requestAnimationFrame(draw);
 }
@@ -76,6 +76,7 @@ class Population {
 			rocket.draw(ctx);
 			rocket.update();
 			if(walls.some(w => w.collision(rocket))) rocket.hitWall = true;
+			// if(rocket.pos.x<-ctx.canvas.width/2 || rocket.pos.x>ctx.canvas.width/2 || rocket.pos.y<-ctx.canvas.height/2 || rocket.pos.y>ctx.canvas.height/2) rocket.hitWall = true;
 		});
 
 

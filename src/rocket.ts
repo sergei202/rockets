@@ -98,6 +98,6 @@ export class Rocket {
 		}
 		if(this.hitWall) this.fitness /= 10;
 
-		this.fitness = Math.pow(this.fitness,2);
+		this.fitness = Math.pow(this.fitness,4);
 	}
 }
