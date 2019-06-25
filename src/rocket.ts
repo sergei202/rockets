@@ -23,11 +23,11 @@ export class Dna {
 		return child;
 	}
 
-	mutate(rate=0.01) {
+	mutate(rate=0.01, size=0.25) {
 		this.genes.forEach(gene => {
 			if(random()<rate) {
-				gene.x = random(-1,1);
-				gene.y = random(-1,1);
+				gene.x += random(-size,+size);
+				gene.y += random(-size,+size);
 			}
 		});
 	}
@@ -57,20 +57,30 @@ export class Rocket {
 		this.dna = new Dna(this.dnaSize);
 	}
 
-	draw(ctx:CanvasRenderingContext2D,  best=false) {
+	draw(ctx:CanvasRenderingContext2D, best=false) {
 		ctx.save();
-		var color = '#800';
-		if(best) color = '#0a0';
+		var color = 'rgba(192,0,0,0.5)';
+		if(best) color = '#f00';
+
+		if(this.hitWall) color = '#aaa';
+		if(this.hitGoal) color = '#0c0';
+
 		ctx.strokeStyle = color;
 		ctx.fillStyle = color;
 		ctx.translate(this.pos.x + ctx.canvas.width/2, ctx.canvas.height/2-this.pos.y);
 		var angle = this.vel.angle;
-		ctx.rotate(2*Math.PI-angle);
-		ctx.strokeRect(-this.width/2, -this.height/2, this.width, this.height);
-		ctx.strokeRect(-this.width/2, -this.height/2, 2,this.height);
-		// if(fill) ctx.fillText(this.fitness.toFixed(4), -this.width/2,4);
+		ctx.rotate(Math.PI/2-angle);
+
+		ctx.beginPath();
+		ctx.moveTo(0, -this.width/2);
+		ctx.lineTo(-this.height/2, this.width/2);
+		ctx.lineTo( this.height/2, this.width/2);
+		ctx.lineTo(0, -this.width/2);
+		// if(best) ctx.fill();
+		// else
+		ctx.stroke();
+
 		ctx.restore();
-		
 	}
 
 	update() {

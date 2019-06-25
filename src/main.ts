@@ -17,6 +17,7 @@ function setup() {
 
 	target = new Target(0,100);
 	pop = new Population(500, 250);
+
 	walls.push(new Wall(0,0, 400,10));
 	walls.push(new Wall(-200,100, 10,200));
 	walls.push(new Wall( 200,100, 10,200));
@@ -24,7 +25,6 @@ function setup() {
 	requestAnimationFrame(draw);
 }
 
-var count = 0;
 function draw() {
 	ctx.clearRect(0,0, ctx.canvas.width,ctx.canvas.height);
 	ctx.stroke();
@@ -50,7 +50,6 @@ function draw() {
 	ctx.fillText(`best:  ${bestFitness.toFixed(6)}`, ctx.canvas.width-100, ctx.canvas.height-30);
 	ctx.fillText(`goal:  ${goalCount}`, ctx.canvas.width-100, ctx.canvas.height-15);
 
-	count++;
 	requestAnimationFrame(draw);
 }
 
@@ -73,12 +72,11 @@ class Population {
 		this.calcFitness();
 		
 		this.rockets.forEach(rocket => {
-			rocket.draw(ctx);
 			rocket.update();
+			rocket.draw(ctx);
 			if(walls.some(w => w.collision(rocket))) rocket.hitWall = true;
 			// if(rocket.pos.x<-ctx.canvas.width/2 || rocket.pos.x>ctx.canvas.width/2 || rocket.pos.y<-ctx.canvas.height/2 || rocket.pos.y>ctx.canvas.height/2) rocket.hitWall = true;
 		});
-
 
 
 		var best = this.rockets.find(r => r.best);
@@ -98,7 +96,7 @@ class Population {
 			var b = this.randomWeighted();
 			var rocket = new Rocket(0,-250, this.steps);
 			rocket.dna = Dna.crossover(a.dna,b.dna);
-			rocket.dna.mutate(0.005);
+			rocket.dna.mutate(0.1, 0.1);
 			return rocket;
 		});
 	}
